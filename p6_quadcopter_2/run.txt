@@ -1,0 +1,2 @@
+floyd run --gpu --mode jupyter
+floyd run --gpu --mode jupyter --env tensorflow-1.5
