@@ -1,4 +1,4 @@
-from keras import layers, models, optimizers
+from keras import layers, models, optimizers, initializers
 from keras import backend as K
 
 class Actor:
@@ -30,7 +30,10 @@ class Actor:
         states = layers.Input(shape=(self.state_size,), name='states')
 
         net = layers.BatchNormalization()(states)
-        net = layers.Dense(units=8, activation='relu')(net)
+        # net = layers.Dense(units=8, activation='relu')(net)
+        net = layers.Dense(units=8, \
+                kernel_initializer=initializers.glorot_uniform(seed=1), \
+                activation='relu')(net)
         # Add hidden layers
         # net = layers.Dense(units=32, activation='relu')(states)
         # net = layers.BatchNormalization()(net)
@@ -45,7 +48,11 @@ class Actor:
         # Try different layer sizes, activations, add batch normalization, regularizers, etc.
 
         # Add final output layer with sigmoid activation
-        raw_actions = layers.Dense(units=self.action_size, activation='sigmoid',
+        # raw_actions = layers.Dense(units=self.action_size, activation='sigmoid',
+        #     name='raw_actions')(net)
+        raw_actions = layers.Dense(units=self.action_size, 
+            kernel_initializer=initializers.glorot_uniform(seed=1),
+            activation='sigmoid',
             name='raw_actions')(net)
 
         # Scale [0, 1] output for each action dimension to proper range

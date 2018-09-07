@@ -39,18 +39,14 @@ class TaskGo():
         # reward = 0.0
         reward = self.sim.v[2]
         # Reward positions close to target along z-axis
-        reward -= (abs(self.sim.pose[2] - self.target_pos[2])) / 2.0 
+        # reward -= (abs(self.sim.pose[2] - self.target_pos[2])) / 2.0 
+        reward += (self.sim.pose[2] - self.target_pos[2]) / 2.0 
         # A lower sensativity towards drifting in the xy-plane
         reward -= (abs(self.sim.pose[:2] - self.target_pos[:2])).sum() / 4.0
         reward -= (abs(self.sim.angular_v[:3])).sum()
 
-
         return reward
-        
-        # reward = -abs(self.sim.pose[2] - self.target_pos[2])
-        # if abs(self.sim.pose[2] - self.target_pos[2]) < 1:  # agent has crossed the target height
-        #     reward += 10.0  # bonus reward
-        # return reward
+
 
 
     def step(self, rotor_speeds):
@@ -63,7 +59,8 @@ class TaskGo():
             pose_all.append(self.sim.pose)
 
             if(self.sim.pose[2] >= self.target_pos[2]):
-                reward += 100
+                # reward += 100
+                reward += 200 / self.sim.time 
                 done = True
         # add target
         # pose_all.append(self.target_pos)

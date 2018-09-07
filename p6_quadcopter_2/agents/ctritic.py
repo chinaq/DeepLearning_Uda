@@ -1,4 +1,4 @@
-from keras import layers, models, optimizers
+from keras import layers, models, optimizers, initializers
 from keras import backend as K
 
 class Critic:
@@ -26,7 +26,10 @@ class Critic:
         actions = layers.Input(shape=(self.action_size,), name='actions')
 
         net_states = layers.BatchNormalization()(states)
-        net_states = layers.Dense(units=8, activation='relu')(net_states)
+        # net_states = layers.Dense(units=8, activation='relu')(net_states)
+        net_states = layers.Dense(units=8, \
+                kernel_initializer=initializers.glorot_uniform(seed=1), \
+                activation='relu')(net_states)
         # Add hidden layer(s) for state pathway
         # net_states = layers.Dense(units=32, activation='relu')(states)
         # net_states = layers.BatchNormalization()(net_states)
@@ -39,7 +42,10 @@ class Critic:
         # net_states = layers.Dropout(0.5)(net_states)
 
         net_actions = layers.BatchNormalization()(actions)
-        net_actions = layers.Dense(units=8, activation='relu')(net_actions)
+        # net_actions = layers.Dense(units=8, activation='relu')(net_actions)
+        net_actions = layers.Dense(units=8, \
+                kernel_initializer=initializers.glorot_uniform(seed=1), \
+                activation='relu')(net_actions)
         # Add hidden layer(s) for action pathway
         # net_actions = layers.Dense(units=32, activation='relu')(actions)
         # net_actions = layers.BatchNormalization()(net_actions)
@@ -60,7 +66,10 @@ class Critic:
         # Add more layers to the combined network if needed
 
         # Add final output layer to prduce action values (Q values)
-        Q_values = layers.Dense(units=1, name='q_values')(net)
+        # Q_values = layers.Dense(units=1, name='q_values')(net)
+        Q_values = layers.Dense(units=1, 
+            kernel_initializer=initializers.glorot_uniform(seed=1),
+            name='q_values')(net)
 
         # Create Keras model
         self.model = models.Model(inputs=[states, actions], outputs=Q_values)
